@@ -1,5 +1,6 @@
 package com.lucasmurakami.workshopmongo.resource;
 
+import com.lucasmurakami.workshopmongo.domain.Post;
 import com.lucasmurakami.workshopmongo.domain.User;
 import com.lucasmurakami.workshopmongo.dto.UserDTO;
 import com.lucasmurakami.workshopmongo.services.UserService;
@@ -20,7 +21,7 @@ public class UserResource {
     private UserService service;
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>>  findAll(){
+    public ResponseEntity<List<UserDTO>> findAll(){
         List<User> list = service.findAll();
         List<UserDTO> listDto = list.stream().map(x -> new UserDTO(x)).toList();
         return ResponseEntity.ok().body(listDto);
@@ -52,6 +53,12 @@ public class UserResource {
         obj.setId(id);
         obj = service.update(obj);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{id}/posts")
+    public ResponseEntity<List<Post>> findPosts(@PathVariable String id){
+        User obj = service.findById(id);
+        return ResponseEntity.ok().body(obj.getPosts());
     }
 
 }
